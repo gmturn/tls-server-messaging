@@ -1,6 +1,6 @@
 import rsa
 
-def generate_new_keys(d_PubKey, d_PrivKey): # pass in the file location for public and private key path
+def generateNewKeys(d_PubKey, d_PrivKey): # pass in the file location for public and private key path
     pubKey, privKey = rsa.newkeys(1024)
     
     # writing keys to their respective files

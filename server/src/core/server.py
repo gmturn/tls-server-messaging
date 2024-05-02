@@ -1,5 +1,5 @@
 import server.src.utilities.config_loader as conf
-from server.src.utilities import all
+from server.src.utilities import generate_keys, load_keys
 
 
 import socket
@@ -12,10 +12,18 @@ class Server:
 
         # INITIALIZE
         self.port = int(self.config['DEFAULT']['Port'])
-        self.d_pubKey = self.config['DEFAULT']['CertificatePath']
-        self.d_privKey = self.config['DEFAULT']['PrivateKeyPath']
+        self.d_PubKey = self.config['DEFAULT']['CertificatePath']
+        self.d_PrivKey = self.config['DEFAULT']['PrivateKeyPath']
         b_generateNewKeys = bool(self.config['DEFAULT']['GenerateNewKeys'])
 
+        # Generate new keys if stated in the config.conf file
         if b_generateNewKeys:
-            pass
+            generate_keys.generateNewKeys(self.d_PubKey, self.d_PrivKey)
+
+        # Load keys from the public.pem and private.pem files
+        self.PubKey, self.PrivKey = load_keys.loadKeys(self.d_PubKey, self.d_PrivKey)
+
+        print(self.PubKey)
+        print()
+        print(self.PrivKey)
 

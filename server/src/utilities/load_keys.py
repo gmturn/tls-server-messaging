@@ -1,6 +1,6 @@
 import rsa
 
-def load_keys(d_PubKey, d_PrivKey):
+def loadKeys(d_PubKey, d_PrivKey):
     with open(d_PubKey, "rb") as f:
         pubKey = rsa.PublicKey.load_pkcs1(f.read())
     
