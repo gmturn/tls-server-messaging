@@ -15,6 +15,8 @@ class Server:
         self.d_PubKey = self.config['DEFAULT']['CertificatePath']
         self.d_PrivKey = self.config['DEFAULT']['PrivateKeyPath']
         b_generateNewKeys = bool(self.config['DEFAULT']['GenerateNewKeys'])
+        self.d_Log = self.config['DEFAULT']['LogPath']
+        self.logging = self.config['DEFAULT']['Logging']
 
         # Generate new keys if stated in the config.conf file
         if b_generateNewKeys:
@@ -23,7 +25,5 @@ class Server:
         # Load keys from the public.pem and private.pem files
         self.PubKey, self.PrivKey = load_keys.loadKeys(self.d_PubKey, self.d_PrivKey)
 
-        print(self.PubKey)
-        print()
-        print(self.PrivKey)
+        
 
