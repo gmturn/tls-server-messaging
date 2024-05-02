@@ -1,3 +1,3 @@
-from server.src.core import server as srv
+from server.src.core.server import Server
 
-testServer = srv.Server("server/config.conf")
+testServer = Server("server/config.conf")
