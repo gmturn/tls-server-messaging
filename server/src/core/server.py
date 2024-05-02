@@ -1,5 +1,7 @@
-import utilities.config_loader as conf
-import utilities.load_keys as keys
+import server.src.utilities.config_loader as conf
+from server.src.utilities import all
+
+
 import socket
 import ssl
 
@@ -10,10 +12,10 @@ class Server:
 
         # INITIALIZE
         self.port = int(self.config['DEFAULT']['Port'])
-        self.d_pubKey = self.config['DEFAULT']['CertificateKeyPath']
+        self.d_pubKey = self.config['DEFAULT']['CertificatePath']
         self.d_privKey = self.config['DEFAULT']['PrivateKeyPath']
         b_generateNewKeys = bool(self.config['DEFAULT']['GenerateNewKeys'])
 
-        print(b_generateNewKeys)
+        if b_generateNewKeys:
+            pass
 
-        #self.pubKey, self.privKey = keys.load_keys(self.config['DEFAULT']['CertificatePath'], self.config['DEFAULT']['PrivateKeyPath'])
