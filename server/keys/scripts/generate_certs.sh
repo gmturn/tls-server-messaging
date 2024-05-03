@@ -1,0 +1,2 @@
+# non-interactive and 10 years expiration
+openssl req -x509 -newkey rsa:4096 -keyout server/keys/key.pem -out server/keys/cert.pem -sha256 -days 365 -nodes -subj "/C=US/ST=California/L=CityName/O=CompanyName/OU=CompanySectionName/CN=www.example.com"

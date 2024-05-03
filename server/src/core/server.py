@@ -16,21 +16,18 @@ class Server:
         # INITIALIZE
         self.port = int(self.config['DEFAULT']['Port'])
         self.host = str(self.config['DEFAULT']['Host'])
-        self.d_PubKey = self.config['DEFAULT']['CertificatePath']
-        self.d_PrivKey = self.config['DEFAULT']['PrivateKeyPath']
+        self.d_CertFile = str(self.config['DEFAULT']['CertificatePath'])
+        self.d_PrivKey = str(self.config['DEFAULT']['PrivateKeyPath'])
 
         self.d_Log = self.config['DEFAULT']['LogPath']
         self.logging = self.config['DEFAULT']['Logging']
         self.b_Whitelist = bool(self.config['DEFAULT']['Whitelist'])
-        b_generateNewKeys = bool(self.config['DEFAULT']['GenerateNewKeys']) # Not a self.arrtibute - only needed temporarily
         
         self.whitelist = []
 
-        # generate new keys if stated in the config.conf file
-        if b_generateNewKeys:
-            generate_keys.generateNewKeys(self.d_PubKey, self.d_PrivKey)
+       
         # load keys from the public.pem and private.pem files
-        self.PubKey, self.PrivKey = load_keys.loadKeys(self.d_PubKey, self.d_PrivKey)
+        # self.PubKey, self.PrivKey = load_keys.loadKeys(self.d_PubKey, self.d_PrivKey)
 
         if self.b_Whitelist:
             try:
@@ -39,28 +36,39 @@ class Server:
                 raise IndexError("Whitelist Error: could not retrieve whitelist")
         
 
-        self.context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-        self.context.load_cert_chain(self.d_PubKey, self.d_PrivKey)
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # self.context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        # self.context.load_cert_chain('server/keys/cert.pem', 'server/keys/key.pem')
+        # self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
+
+
+
+        self.socket = socket.socket()
         self.socket.bind((self.host, self.port))
         self.socket.listen(5)
+        
         print(f"Server now listening on port {self.port}")
 
 
     def accept_connection(self):
-        new_socket, fromaddr = self.socket.accept() # (awaits connection)
-        secure_socket = self.context.wrap_socket(new_socket, server_side=True) # wrapping the socket with TLS
+        while True:
+            newsocket, fromaddr = self.socket.accept() # (awaits connection)
 
-        # Verifying connection permission from whitelist
-        if self.b_Whitelist:
-            try:
-                fromaddr in self.whitelist
-            except:
-                raise PermissionError(f"Error: IP Address [{fromaddr}] not whitelisted")
-        
-        # pass the interaction to the request handler
-        handler = RequestHandler(secure_socket, fromaddr)
-        handler.handle_request()
+            # creating a secure connection
+            secure_socket = ssl.wrap_socket(newsocket,
+                                            server_side=True,
+                                            certfile=self.d_CertFile,
+                                            keyfile=self.d_PrivKey,
+                                            ssl_version=ssl.PROTOCOL_TLSv1)
+
+            # Verifying connection permission from whitelist
+            if self.b_Whitelist:
+                try:
+                    fromaddr in self.whitelist
+                except:
+                    raise PermissionError(f"Error: IP Address [{fromaddr}] not whitelisted")
+
+            request_handler = RequestHandler(secure_socket, fromaddr)
+            request_handler.handle_request()
 
 
 

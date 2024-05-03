@@ -1,3 +1,6 @@
+import ssl
+import socket
+
 class RequestHandler:
     def __init__(self, connection, address):
         self.connection = connection
@@ -6,12 +9,13 @@ class RequestHandler:
     def handle_request(self):
         print(f"Connected to {self.connection}")
 
-        try:
-            while True:
-                data = self.connection.recv(1024)
-                if not data:
-                    break  # No more data from client
-                print(f"Received from {self.address}: {data.decode()}")
-                self.connection.sendall(data)  # Echo back to client
-        finally:
-            self.connection.close()
+        c_Message = self.connection.read()
+        
+        while c_Message:
+            print(f"IP {self.address}: '{c_Message}'")
+            s_Message = str(input("Response: "))
+            self.connection.send(s_Message)
+            c_Message = self.connection.read()
+        
+        print(f"Connection with IP {self.address} has been terminated. Closing secure socket.")
+        self.connection.close()
