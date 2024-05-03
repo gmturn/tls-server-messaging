@@ -46,11 +46,16 @@ class Server:
         print(f"Server now listening on port {self.port}")
 
 
-    def accpet_connection(self):
+    def accept_connection(self):
         new_socket, fromaddr = self.socket.accept()
+        secure_socket = self.context.wrap_socket(new_socket, server_side=True)
 
         if self.b_Whitelist:
-            pass
+            try:
+                fromaddr in self.whitelist
+            except:
+                print(f"Error: IP Address [{fromaddr}] not whitelisted")
+                return
 
         
 
