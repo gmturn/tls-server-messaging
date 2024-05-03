@@ -37,33 +37,9 @@ class Server:
             except:
                 raise IndexError("Whitelist Error: could not retrieve whitelist")
         
-        # creating socket attribute
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # initialize socket and begin listening
-        self.socket.bind((self.host, self.port))
-        self.listen_socket()
-
-    
-    def listen_socket(self):
-        self.socket.listen() # backlog argument accepted
-        connection, address = self.socket.accept()
-
-        if self.b_Whitelist:
-            try:
-                address in self.whitelist
-            except:
-                self.socket.close()
-                print(f"Connection Denied: IP address [{address}] not in whitelist")
-                return
         
 
-    def accept_connection(self):
-        if not self.b_Whitelist:
-            pass
-
-        else:
-            pass
-
-
+    
+    
         
 
