@@ -1,6 +1,7 @@
 #import server.src.utilities.config_loader as conf
 from server.src.utilities import generate_keys, load_keys, read_whitelist
 import server.src.utilities.config_loader as conf
+from server.src.handlers.request_handler import RequestHandler
 
 
 import socket
@@ -47,15 +48,21 @@ class Server:
 
 
     def accept_connection(self):
-        new_socket, fromaddr = self.socket.accept()
-        secure_socket = self.context.wrap_socket(new_socket, server_side=True)
+        new_socket, fromaddr = self.socket.accept() # (awaits connection)
+        secure_socket = self.context.wrap_socket(new_socket, server_side=True) # wrapping the socket with TLS
 
+        # Verifying connection permission from whitelist
         if self.b_Whitelist:
             try:
                 fromaddr in self.whitelist
             except:
-                print(f"Error: IP Address [{fromaddr}] not whitelisted")
-                return
+                raise PermissionError(f"Error: IP Address [{fromaddr}] not whitelisted")
+        
+        # pass the interaction to the request handler
+        handler = RequestHandler(secure_socket, fromaddr)
+        handler.handle_request()
+
+
 
         
 
