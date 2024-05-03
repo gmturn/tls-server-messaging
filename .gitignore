@@ -1,6 +1,6 @@
 tls_mimic/**
 server/__pycache__/**
 server/src/core/__pycache__/**
-TLS_Mimic.egg-info/**
+TLS_Server-Client_Messaging.egg-info/**
 server/src/utilities/__pycache__/**
 .venv/**
