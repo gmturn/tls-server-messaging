@@ -55,12 +55,6 @@ class Server:
                 self.socket.close()
                 print(f"Connection Denied: IP address [{address}] not in whitelist")
                 return
-
-        while True:
-            data = connection.recv(1024)
-
-
-
         
 
     def accept_connection(self):
