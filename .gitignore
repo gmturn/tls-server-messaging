@@ -3,3 +3,4 @@ server/__pycache__/**
 server/src/core/__pycache__/**
 TLS_Mimic.egg-info/**
 server/src/utilities/__pycache__/**
+.venv/**
