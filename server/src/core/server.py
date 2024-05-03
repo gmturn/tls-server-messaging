@@ -37,6 +37,21 @@ class Server:
             except:
                 raise IndexError("Whitelist Error: could not retrieve whitelist")
         
+
+        self.context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+        self.context.load_cert_chain(self.d_PubKey, self.d_PrivKey)
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.bind((self.host, self.port))
+        self.socket.listen(5)
+        print(f"Server now listening on port {self.port}")
+
+
+    def accpet_connection(self):
+        new_socket, fromaddr = self.socket.accept()
+
+        if self.b_Whitelist:
+            pass
+
         
 
     
