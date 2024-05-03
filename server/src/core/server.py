@@ -52,14 +52,19 @@ class Server:
     def accept_connection(self):
         while True:
             newsocket, fromaddr = self.socket.accept() # (awaits connection)
+            
 
             # creating a secure connection
-            secure_socket = ssl.wrap_socket(newsocket,
+            try:
+                secure_socket = ssl.wrap_socket(newsocket,
                                             server_side=True,
                                             certfile=self.d_CertFile,
                                             keyfile=self.d_PrivKey,
-                                            ssl_version=ssl.PROTOCOL_TLSv1)
-
+                                            ssl_version=ssl.PROTOCOL_TLSv1,
+                                            do_handshake_on_connect=True)
+            except:
+                print("Error: Could not establish secure connection with client. Exiting")
+                
             # Verifying connection permission from whitelist
             if self.b_Whitelist:
                 try:
