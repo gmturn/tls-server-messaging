@@ -42,39 +42,57 @@ class Server:
 
 
 
-        self.socket = socket.socket()
-        self.socket.bind((self.host, self.port))
-        self.socket.listen(5)
+        self.context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+        self.context.load_cert_chain(certfile=self.d_CertFile, keyfile=self.d_PrivKey)
         
-        print(f"Server now listening on port {self.port}")
+        self.s_Socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.s_Socket.bind((self.host, self.port))
+        self.s_Socket.listen(5)
+      
+        print(f"Server now listening on Port[{self.port}]")
 
 
     def accept_connection(self):
         while True:
-            newsocket, fromaddr = self.socket.accept() # (awaits connection)
+            newsocket, address = self.s_Socket.accept()
+            # whitelist check
+            try:
+                address in self.whitelist
+            except:
+                raise PermissionError(f"Error: IP {address} not in whitelist. Exiting.")
+            
+            
+            try:
+                secure_socket = self.context.wrap_socket(newsocket, server_side=True)
+                print(f"Secure connection with IP [{address}] established...")
+                
+                data = secure_socket.read()
+                while data:
+                    print(data)
+                    response = str(input("Response: "))
+                    secure_socket.sendall(response.encode())
+                    data = secure_socket.read()
+                
+                print(f"Secure connection with IP [{address}] terminated.")
+                secure_socket.close()
+
             
 
-            # creating a secure connection
-            try:
-                secure_socket = ssl.wrap_socket(newsocket,
-                                            server_side=True,
-                                            certfile=self.d_CertFile,
-                                            keyfile=self.d_PrivKey,
-                                            ssl_version=ssl.PROTOCOL_TLSv1,
-                                            do_handshake_on_connect=True)
-            except:
-                print("Error: Could not establish secure connection with client. Exiting")
-                
-            # Verifying connection permission from whitelist
-            if self.b_Whitelist:
-                try:
-                    fromaddr in self.whitelist
-                except:
-                    raise PermissionError(f"Error: IP Address [{fromaddr}] not whitelisted")
+            except ssl.SSLError as e:
+                print(f"SSL error: {e}")
+            except Exception as e:
+                print(f"Error: could not establish connection with clinet: {e}")
+            
 
-            request_handler = RequestHandler(secure_socket, fromaddr)
-            request_handler.handle_request()
 
+        
+        # creating a secure connection
+        try:
+            pass
+        except:
+            connection, address = self.secure_socket.accept()
+            
+       
 
 
         
