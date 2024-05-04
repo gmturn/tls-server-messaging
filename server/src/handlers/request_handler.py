@@ -7,13 +7,18 @@ class RequestHandler:
         self.address = address
 
     def handle_request(self):
-        message = str(self.connection.recv(1024).decode())
-        print(message)
+        data = self.connection.recv(1024).decode()
+        while data:
+            print(f"IP [{self.address}]: '{data}'")
+            response = str(input("Enter Response: "))
+            
+            try:
+                self.connection.sendall(response.encode())
+                data = str(self.connection.recv(1024).decode())
+            except:
+                print("Error: failed to send message to client.")
+        
 
-        while message:
-            response = str(input("Response: "))
-            self.connection.sendall(response.encode())
-            message = str(self.connection.recv(1024).decode())
                 
         print(f"Connection with IP {self.address} has been terminated. Closing secure socket.")
         self.connection.close()

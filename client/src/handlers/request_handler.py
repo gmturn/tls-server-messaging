@@ -4,16 +4,16 @@ class RequestHandler:
         self.address = address
 
     def request_connection(self):
-        self.connection.sendall("Hello, World!".encode())
+        self.connection.sendall("Client has connected.".encode())
 
         message = str(self.connection.recv(1024).decode())
         while message:
             
-            print(f"Host [{self.address}]: {message}")
+            print(f"Host [{self.address}]: '{message}'")
 
         
-            response = str(input("Response: "))
-            self.connection.senda(response.encode())
+            response = str(input("Enter Response: "))
+            self.connection.sendall(response.encode())
             message = str(self.connection.recv(1024).decode())
             
                 

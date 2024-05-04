@@ -66,12 +66,14 @@ class Server:
                 secure_socket = self.context.wrap_socket(newsocket, server_side=True)
                 print(f"Secure connection with IP [{address}] established...")
                 
-                data = secure_socket.read()
-                while data:
-                    print(data)
-                    response = str(input("Response: "))
-                    secure_socket.sendall(response.encode())
-                    data = secure_socket.read()
+                s_Handler = RequestHandler(secure_socket, self.host)
+                s_Handler.handle_request()
+                # data = secure_socket.read()
+                # while data:
+                #     print(data)
+                #     response = str(input("Enter Response: "))
+                #     secure_socket.sendall(response.encode())
+                #     data = str(secure_socket.recv(1024).decode())
                 
                 print(f"Secure connection with IP [{address}] terminated.")
                 secure_socket.close()
@@ -86,11 +88,6 @@ class Server:
 
 
         
-        # creating a secure connection
-        try:
-            pass
-        except:
-            connection, address = self.secure_socket.accept()
             
        
 

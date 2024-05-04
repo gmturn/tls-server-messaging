@@ -22,13 +22,12 @@ class Client:
         c_Socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         secure_socket = self.context.wrap_socket(c_Socket, server_hostname=self.host)
         try:
-            while True:
-                secure_socket.connect((self.host, self.port))
-                print(f"Now connected to Host [{self.host}]")
-                secure_socket.sendall("Hello, all!".encode())
-    
-                handler = handle.RequestHandler(secure_socket, self.host)
-
+            secure_socket.connect((self.host, self.port))
+            #secure_socket.sendall("Hello, all!".encode())
+            print(f"Now connected to Host [{self.host}]")
+            
+            handler = handle.RequestHandler(secure_socket, self.host)
+            handler.request_connection()
             
         except Exception as e:
             print(f"Error connecting: {e}. Exiting.")
