@@ -10,10 +10,10 @@ This project si a simple messaging program that utilizes a client and server SSL
 
 ## Installation and Setup
 Run the following command in your terminal:
-`git clone https://github.com/gmturn/tls-server-messaging/`
+- `git clone https://github.com/gmturn/tls-server-messaging/`
 
 Run the `setup.py` file by executing the following command in your terminal:
-`pip install -e .`
+- `pip install -e .`
 
 ## Usage
 To run either the client or server script, enter one of the following commands into your terminal:
