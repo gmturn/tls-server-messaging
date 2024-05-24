@@ -17,5 +17,5 @@ Run the `setup.py` file by executing the following command in your terminal:
 
 ## Usage
 To run either the client or server script, enter one of the following commands into your terminal:
-`python scripts/run_server.py`
-`python scripts/run_client.py`
+- `python scripts/run_server.py`
+- `python scripts/run_client.py`
