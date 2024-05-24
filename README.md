@@ -19,3 +19,7 @@ Run the `setup.py` file by executing the following command in your terminal:
 To run either the client or server script, enter one of the following commands into your terminal:
 - `python scripts/run_server.py`
 - `python scripts/run_client.py`
+
+
+#### *NOTE*
+You may have to setup port forwarding on your router if you are running the client and server on different machines.
